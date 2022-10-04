@@ -1,0 +1,32 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (7.0.3)
+      activesupport (= 7.0.3)
+    activerecord (7.0.3)
+      activemodel (= 7.0.3)
+      activesupport (= 7.0.3)
+    activesupport (7.0.3)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      tzinfo (~> 2.0)
+    concurrent-ruby (1.1.10)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
+    rake (13.0.6)
+    require_all (3.0.0)
+    sqlite3 (1.5.0-x86_64-linux)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  activerecord
+  rake
+  require_all
+  sqlite3
+
+BUNDLED WITH
+   2.3.16

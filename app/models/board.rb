@@ -1,36 +1,39 @@
-require_relative '../../config/environment'
-
 class Board
+  attr_accessor :coords, :borders
 
-  def print
-    grid = Array.new(10, Array.new(10, " "))
-    borders = Array.new(10, Array.new(9,"|"))
+  def initialize
+    @coords = []
+    @borders = []
+    10.times do
+      @coords << Array.new(10, " ")
+      @borders << Array.new(9, "|")
+    end
+  end
 
-    puts "  A|B|C|D|E|F|G|H|I|J ".underline
-    grid.each_with_index do |row, a|
-      print "#{a}"+"|".on_blue
+  def print_board(status)
+    puts '   ' + 'A|B|C|D|E|F|G|H|I|J'.underline
+    coords.each_with_index do |row, a|
+      print " #{a}" + '|'.on_blue
       row.each_with_index do |col, b|
         print "#{col}#{borders[a][b]}".underline.on_blue
       end
-      puts "|".on_blue
+      puts '|'.on_blue + "  " + status[a]
     end
-    nil
-  end
-
-
-    puts "  A|B|C|D|E|F|G|H|I|J ".black.on_blue.underline
-    puts "0| | | | | | | | | | |"
-    puts "1| | | | | | | | | | |"
-    puts "2| | | | | | | | | | |"
-    puts "3| | | | | | | | | | |"
-    puts "4| | | | | | |▲| | | |"
-    puts "5| | | | | | |█| | | |"
-    puts "6| |◄■■■■■►| |█| | | |"
-    puts "7| | | | | | |█| | | |"
-    puts "8| | | | | | |▼| | | |"
-    puts "9| | | | | | | | | | |"
   end
 end
+
+# puts "  A|B|C|D|E|F|G|H|I|J "
+# puts "0| | | | | | | | | | |"
+# puts "1| | | | | | | | | | |"
+# puts "2| | | | | | | | | | |"
+# puts "3| | | | | | | | | | |"
+# puts "4| | | | | | |▲| | | |"
+# puts "5| | | | | | |█| | | |"
+# puts "6| |◄■■■■■►| |█| | | |"
+# puts "7| | | | | | |█| | | |"
+# puts "8| | | | | | |▼| | | |"
+# puts "9| | | | | | | | | | |"
+
 # X = hit (but in red)
 # 7 = • = miss
 # 30 = ▲ = top
