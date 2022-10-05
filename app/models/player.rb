@@ -48,13 +48,17 @@ class Player
 
   def verify_coord(pos, board)
     if pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/)
-      #check if spot (board.printed_coords) is already occupied - remove same check from verify_pos?
-      pos[0] + pos[1]
+      if board.printed_coords[pos[1].to_i][pos[0].upcase.ord - 65] != ' '
+        puts "You've already used that spot, please try again."
+        verify_coord gets, board
+      else
+        pos[0] + pos[1]
+      end
     elsif pos[0].downcase == 'r'
       pos[0].downcase
     else
       puts "That's not a valid coordinate, please try again."
-      verify_coord gets
+      verify_coord gets, board
     end
   end
 
@@ -66,23 +70,49 @@ class Player
       return fail_pos ship, psr
     end
     ship.size.times do
-      return fail_pos ship, psr if @board.printed_coords[y + counter_y][x + counter_x] != " "
-
+      return fail_pos ship, psr if @board.private_coords[y + counter_y][x + counter_x] != ' '
       direction == 'd' ? counter_y += 1 : counter_x += 1
     end
     system('clear') || system('cls')
     @board.record_ship ship, x, y, direction
-    @board.draw_ship ship, x, y, direction, status if name == "Player"
+    @board.draw_ship ship, x, y, direction, status if name == 'Player'
   end
 
   def fail_pos(ship, psr)
     return place_ship_random ship if psr
-
     puts "It doesn't fit there, please try again."
     place_ship ship
   end
 
-  def attack(enemy)
-    pos = verify_coord gets, enemy
+  def attack(opponent)
+    pos = verify_coord gets, opponent.board
+    x = pos[0].upcase.ord - 65 # converts A-J into 0-9
+    y = pos[1].to_i
+      return miss opponent, x, y if opponent.board.private_coords[y][x] == ' '
+    hit opponent, x, y
+  end
+
+  def miss(opponent, x, y)
+    opponent.board.printed_coords[y][x] = '•'
+    'Your attack missed.'
+  end
+
+  def hit(opponent, x, y)
+    ship = opponent.board.private_coords[y][x][0]
+    ship.health -= 1
+    opponent.board.printed_coords[y][x] = 'X'.red
+    if ship.health == 0
+      update_status ship, opponent
+      "Hit!, you've sunk the enemy's #{ship.name}!"
+    else
+      "Hit!"
+    end
+    #Enemy attacked "#{(x + 65).chr}#{y}"
+  end
+
+  def update_status(ship, opponent)
+    index = @ships.find_index {|item| item.name == ship.name} * 2 + 1
+    opponent.status[index] = '■'.red * ship.size + ' ' * (10 - ship.size) + '  |'
+    binding.pry
   end
 end

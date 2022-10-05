@@ -8,9 +8,9 @@ class Board
     @printed_coords = []
     @borders = []
     10.times do
-      @private_coords << Array.new(10, "")
-      @printed_coords << Array.new(10, " ")
-      @borders << Array.new(9, "|")
+      @private_coords << Array.new(10, ' ')
+      @printed_coords << Array.new(10, ' ')
+      @borders << Array.new(9, '|')
     end
   end
 

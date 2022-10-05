@@ -31,7 +31,9 @@ class Game
 
   def attack
     print "\nWhere would you like to attack?"
-    player.attack enemy.board
+    hit = player.attack enemy
+    refresh
+    puts "#{hit} Opponent's turn."
   end
 
   def defend
@@ -44,6 +46,6 @@ class Game
   end
 
   def restart
-    #create
+    Game.new
   end
 end
