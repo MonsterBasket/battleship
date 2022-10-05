@@ -26,69 +26,57 @@ class Player
   end
 
   def place_ship(ship)
-    puts "Where would you like to place your #{ship.name}?"
-    puts '(Type a letter between A and J and a number between 0 and 9)'
+    puts "\nWhere would you like to place your #{ship.name}?"
+    print '(Type a coordinate from A0-J9 or R for random): '
     pos = verify_coord gets
+    return place_ship_random ship if pos == 'r'
     puts "#{pos.chomp.upcase}, Great! Now do you want that going across, or down?"
-    puts '(type d for down, or just press enter for across)'
+    print '(type d for down, or just press enter for across): '
     direction = gets[0]
     x = pos[0].upcase.ord - 65 # converts A-J into 0-9
     y = pos[1].to_i
     verify_pos ship, x, y, direction
   end
 
+  def place_ship_random(ship)
+    down = [true, false].sample
+    x = down ? rand(10) : rand(10 - ship.size)
+    y = down ? rand(10 - ship.size) : rand(10)
+    verify_pos(ship, x, y, down ? 'd' : '', true)
+  end
+
   def verify_coord(pos)
-    if pos[0].match(/[a-zA-Z]/) && pos[1].match(/[0-9]/)
+    if pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/)
       pos[0] + pos[1]
+    elsif pos[0].downcase == 'r'
+      pos[0].downcase
     else
       puts "That's not a valid coordinate, please try again."
-      verify gets
+      verify_pos gets
     end
   end
 
-  def verify_pos(ship, x, y, direction)
+  def verify_pos(ship, x, y, direction, psr = false)
     counter_x = counter_y = 0
     if direction == 'd'
-      return fail_pos ship if 10 - y < ship.size
+      return fail_pos ship, psr if 10 - y < ship.size
     elsif 10 - x < ship.size
-      return fail_pos ship
+      return fail_pos ship, psr
     end
     ship.size.times do
-      return fail_pos ship if @board.coords[y + counter_y][x + counter_x] != " "
+      return fail_pos ship, psr if @board.coords[y + counter_y][x + counter_x] != " "
 
       direction == 'd' ? counter_y += 1 : counter_x += 1
     end
-    draw_ship ship, x, y, direction
+    system('clear') || system('cls')
+    ship.record x, y, direction
+    @board.draw_ship ship, x, y, direction, status
   end
 
-  def fail_pos(ship)
+  def fail_pos(ship, psr)
+    return place_ship_random ship if psr
+
     puts "It doesn't fit there, please try again."
     place_ship ship
-  end
-
-  def draw_ship (ship, x, y, direction)
-    counter_x = counter_y = 0
-    # if direction == 'd'
-      @board.coords[y][x] = direction == 'd' ? '▲' : '◄'
-      @board.borders[y][x] = '■' if direction != 'd'
-      loop do
-        direction == 'd' ? counter_y += 1 : counter_x += 1
-        break if counter_y == ship.size - 1 || counter_x == ship.size - 1
-        @board.coords[y + counter_y][x + counter_x] = direction == 'd' ? '█' : '■'
-        @board.borders[y][x + counter_x] = '■' if direction != 'd'
-      end
-      @board.coords[y + counter_y][x + counter_x] = direction == 'd' ? '▼' : '►'
-    # else
-    #   @board.coords[y][x] = '◄'
-    #   @board.borders[y][x] = '■'
-    #   loop do
-    #     counter += 1
-    #     break if counter == ship.size - 1
-    #     @board.coords[y][x + counter] = '■'
-    #     @board.borders[y][x + counter] = '■'
-    #   end
-    #   @board.coords[y][x + counter] = '►'
-    # end
-    @board.print_board status
   end
 end

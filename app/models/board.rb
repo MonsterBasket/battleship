@@ -20,19 +20,21 @@ class Board
       puts '|'.on_blue + "  " + status[a]
     end
   end
-end
 
-# puts "  A|B|C|D|E|F|G|H|I|J "
-# puts "0| | | | | | | | | | |"
-# puts "1| | | | | | | | | | |"
-# puts "2| | | | | | | | | | |"
-# puts "3| | | | | | | | | | |"
-# puts "4| | | | | | |▲| | | |"
-# puts "5| | | | | | |█| | | |"
-# puts "6| |◄■■■■■►| |█| | | |"
-# puts "7| | | | | | |█| | | |"
-# puts "8| | | | | | |▼| | | |"
-# puts "9| | | | | | | | | | |"
+  def draw_ship (ship, x, y, direction, status)
+    counter_x = counter_y = 0
+    coords[y][x] = direction == 'd' ? '▲' : '◄'
+    borders[y][x] = '■' if direction != 'd'
+    loop do
+      direction == 'd' ? counter_y += 1 : counter_x += 1
+      break if counter_y == ship.size - 1 || counter_x == ship.size - 1
+      coords[y + counter_y][x + counter_x] = direction == 'd' ? '█' : '■'
+      borders[y][x + counter_x] = '■' if direction != 'd'
+    end
+    coords[y + counter_y][x + counter_x] = direction == 'd' ? '▼' : '►'
+    print_board status
+  end
+end
 
 # X = hit (but in red)
 # 7 = • = miss

@@ -5,4 +5,8 @@ class Ship
     @name = name
     @size = size
   end
+
+  def record(x, y, direction)
+    # not sure about this, revisit once attacks start
+  end
 end
