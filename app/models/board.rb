@@ -25,17 +25,15 @@ class Board
     end
   end
 
-  # This is for confirming 
+  # This is for confirming that the entered coordinate is valid and not used.
   def verify_coord(pos)
-    if pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/)
+    if pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/) # will need to drastically change this if I implement an option for board size
       if printed_coords[pos[1].to_i][pos[0].upcase.ord - 65] != ' '
         puts "You've already used that spot, please try again."
         verify_coord gets
       else
         pos[0] + pos[1]
       end
-    # elsif placing && pos[0].downcase == 'r'
-    #   pos[0].downcase
     else
       puts "That's not a valid coordinate, please try again."
       verify_coord gets
@@ -64,7 +62,6 @@ class Board
     puts "It doesn't fit there, please try again."
     player.place_ship ship
   end
-  # ----------------------------------------------------------------
 
   def record_ship(ship, x, y, direction)
     counter_x = counter_y = 0

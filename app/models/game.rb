@@ -7,9 +7,7 @@ class Game
     @player = Player.new 'Player'
     init
     until !playing
-      refresh
       attack
-      defend
     end
     game_over
   end
@@ -19,6 +17,7 @@ class Game
     player.board.print_board player.status
     player.ships.each {|ship| player.place_ship ship}
     enemy.ships.each {|ship| enemy.place_ship_random ship}
+    refresh
   end
 
   def refresh
@@ -31,13 +30,16 @@ class Game
 
   def attack
     print "\nWhere would you like to attack?"
-    hit = player.attack enemy
-    refresh
-    puts "#{hit} Opponent's turn."
+    player_hit = player.attack enemy
+    defend player_hit
   end
 
-  def defend
-    puts "The enemy attacked #{}! It's a #{}!"
+  def defend(player_hit)
+    puts "work in progress, please enter Enemy's attack"
+    hit = enemy.attack player
+    refresh
+    puts player_hit
+    puts hit
   end
 
   def game_over

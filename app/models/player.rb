@@ -52,30 +52,13 @@ class Player
     x = pos[0].upcase.ord - 65 # converts A-J into 0-9
     y = pos[1].to_i
       return miss opponent, x, y if opponent.board.private_coords[y][x] == ' '
-    hit opponent, x, y
+    ship = opponent.board.private_coords[y][x][0]
+    ship.hit @name, opponent, x, y
   end
 
   def miss(opponent, x, y)
     opponent.board.printed_coords[y][x] = '•'
-    'Your attack missed.'
-  end
-
-  def hit(opponent, x, y)
-    ship = opponent.board.private_coords[y][x][0]
-    ship.health -= 1
-    opponent.board.printed_coords[y][x] = 'X'.red
-    if ship.health == 0
-      update_status ship, opponent
-      "Hit! You've sunk the enemy's #{ship.name}!"
-    else
-      "Hit!"
-    end
-    #Enemy attacked "#{(x + 65).chr}#{y}"
-  end
-
-  def update_status(ship, opponent)
-    index = @ships.find_index {|item| item.name == ship.name} * 2 + 1
-    opponent.status[index] = '■'.red * ship.size + ' ' * (10 - ship.size) + '  |'
-    binding.pry
+    return "\nYour attack missed." if name == "Player"
+    return "The enemy attacked #{(x + 65).chr}#{y}, but missed." if name == "Enemy"
   end
 end
