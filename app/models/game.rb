@@ -3,7 +3,7 @@ class Game
 
   def initialize
     @playing = true
-    @enemy = Player.new 'Enemy'
+    @enemy = Enemy.new 'Enemy'
     @player = Player.new 'Player'
     init
     until !playing
@@ -29,14 +29,9 @@ class Game
   end
 
   def attack
-    print "\nWhere would you like to attack?"
-    player_hit = player.attack enemy
-    defend player_hit
-  end
-
-  def defend(player_hit)
-    puts "work in progress, please enter Enemy's attack"
-    hit = enemy.attack player
+    print "\nWhere would you like to attack? "
+    player_hit = player.target enemy
+    hit = enemy.target player
     refresh
     puts player_hit
     puts hit

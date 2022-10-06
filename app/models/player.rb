@@ -35,8 +35,7 @@ class Player
     puts "#{pos.chomp.upcase}, Great! Now do you want that going across, or down?"
     print '(type d for down, or just press enter for across): '
     direction = gets[0]
-    x = pos[0].upcase.ord - 65 # converts A-J into 0-9
-    y = pos[1].to_i
+    x, y = convert_pos(pos)
     @board.verify_pos self, ship, x, y, direction
   end
 
@@ -47,14 +46,28 @@ class Player
     @board.verify_pos(self, ship, x, y, down ? 'd' : '', true)
   end
 
-  def attack(opponent)
-    pos = opponent.board.verify_coord gets
+  def convert_pos(pos)
     x = pos[0].upcase.ord - 65 # converts A-J into 0-9
     y = pos[1].to_i
+    [x, y]
+  end
+
+  def target(opponent)
+    pos = opponent.board.verify_coord gets
+    attack opponent, pos
+  end
+
+  def attack(opponent, pos)
+    x, y = convert_pos(pos)
       return miss opponent, x, y if opponent.board.private_coords[y][x] == ' '
     ship = opponent.board.private_coords[y][x][0]
-    ship.hit @name, opponent, x, y
+    segment = opponent.board.private_coords[y][x][1]
+    ship.hit name, opponent, x, y, segment
   end
+
+  # def enemy_attack
+
+  # end
 
   def miss(opponent, x, y)
     opponent.board.printed_coords[y][x] = '•'

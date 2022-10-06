@@ -66,7 +66,7 @@ class Board
   def record_ship(ship, x, y, direction)
     counter_x = counter_y = 0
     ship.size.times do
-      private_coords[y + counter_y][x + counter_x] = [ship, 1]
+      private_coords[y + counter_y][x + counter_x] = [ship,  direction == 'd' ? counter_y : counter_x]
       direction == 'd' ? counter_y += 1 : counter_x += 1
     end
   end
