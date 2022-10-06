@@ -29,63 +29,26 @@ class Player
   def place_ship(ship)
     puts "\nWhere would you like to place your #{ship.name}?"
     print '(Type a coordinate from A0-J9 or R for random): '
-    pos = verify_coord gets, board
-    return place_ship_random ship if pos == 'r'
+    pos = gets
+    return place_ship_random ship if pos[0].downcase == 'r'
+    @board.verify_coord pos
     puts "#{pos.chomp.upcase}, Great! Now do you want that going across, or down?"
     print '(type d for down, or just press enter for across): '
     direction = gets[0]
     x = pos[0].upcase.ord - 65 # converts A-J into 0-9
     y = pos[1].to_i
-    verify_pos ship, x, y, direction
+    @board.verify_pos self, ship, x, y, direction
   end
 
   def place_ship_random(ship)
     down = [true, false].sample
     x = down ? rand(10) : rand(10 - ship.size)
     y = down ? rand(10 - ship.size) : rand(10)
-    verify_pos(ship, x, y, down ? 'd' : '', true)
-  end
-
-  def verify_coord(pos, board)
-    if pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/)
-      if board.printed_coords[pos[1].to_i][pos[0].upcase.ord - 65] != ' '
-        puts "You've already used that spot, please try again."
-        verify_coord gets, board
-      else
-        pos[0] + pos[1]
-      end
-    elsif pos[0].downcase == 'r'
-      pos[0].downcase
-    else
-      puts "That's not a valid coordinate, please try again."
-      verify_coord gets, board
-    end
-  end
-
-  def verify_pos(ship, x, y, direction, psr = false)
-    counter_x = counter_y = 0
-    if direction == 'd'
-      return fail_pos ship, psr if 10 - y < ship.size
-    elsif 10 - x < ship.size
-      return fail_pos ship, psr
-    end
-    ship.size.times do
-      return fail_pos ship, psr if @board.private_coords[y + counter_y][x + counter_x] != ' '
-      direction == 'd' ? counter_y += 1 : counter_x += 1
-    end
-    system('clear') || system('cls')
-    @board.record_ship ship, x, y, direction
-    @board.draw_ship ship, x, y, direction, status if name == 'Player'
-  end
-
-  def fail_pos(ship, psr)
-    return place_ship_random ship if psr
-    puts "It doesn't fit there, please try again."
-    place_ship ship
+    @board.verify_pos(self, ship, x, y, down ? 'd' : '', true)
   end
 
   def attack(opponent)
-    pos = verify_coord gets, opponent.board
+    pos = opponent.board.verify_coord gets
     x = pos[0].upcase.ord - 65 # converts A-J into 0-9
     y = pos[1].to_i
       return miss opponent, x, y if opponent.board.private_coords[y][x] == ' '
@@ -103,7 +66,7 @@ class Player
     opponent.board.printed_coords[y][x] = 'X'.red
     if ship.health == 0
       update_status ship, opponent
-      "Hit!, you've sunk the enemy's #{ship.name}!"
+      "Hit! You've sunk the enemy's #{ship.name}!"
     else
       "Hit!"
     end
