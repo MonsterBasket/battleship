@@ -52,22 +52,14 @@ class Player
     [x, y]
   end
 
-  def target(opponent)
+  def attack(opponent)
     pos = opponent.board.verify_coord gets
-    attack opponent, pos
-  end
-
-  def attack(opponent, pos)
     x, y = convert_pos(pos)
       return miss opponent, x, y if opponent.board.private_coords[y][x] == ' '
     ship = opponent.board.private_coords[y][x][0]
     segment = opponent.board.private_coords[y][x][1]
     ship.hit name, opponent, x, y, segment
   end
-
-  # def enemy_attack
-
-  # end
 
   def miss(opponent, x, y)
     opponent.board.printed_coords[y][x] = '•'

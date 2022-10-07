@@ -17,7 +17,7 @@ class Enemy < Player
     # e = D0 going right
     # f = I0 going left
     # g = H0 going left
-    # h = H0 going left
+    # h = G0 going left
     [a, b, c, d].sample
   end
 
@@ -32,7 +32,6 @@ class Enemy < Player
   end
 
   def aimed_target(opponent)
-    puts @current_targets
     ship = @current_targets.keys[0]
     direction = @current_targets[ship].except(:angle).keys.sample
     x, y = @current_targets[ship].delete(direction)
@@ -48,6 +47,7 @@ class Enemy < Player
       end
     end
     pos = "#{(x + 65).chr}#{y}"
+    check_attack_pattern pos
     attack opponent, pos
   end
 
@@ -57,7 +57,6 @@ class Enemy < Player
     ship = opponent.board.private_coords[y][x][0]
     segment = opponent.board.private_coords[y][x][1]
     get_targets opponent, pos
-    puts @current_targets
     ship.hit name, opponent, x, y, segment
   end
 
@@ -76,6 +75,14 @@ class Enemy < Player
         @current_targets[ship]['left'] = [x - 1, y] if x > 0 && !['•', 'X'.red].include?(opponent.board.printed_coords[y][x - 1])
         @current_targets[ship]['right'] = [x + 1, y] if x < 9 && !['•', 'X'.red].include?(opponent.board.printed_coords[y][x + 1])
       end
+    end
+  end
+
+  def check_attack_pattern(pos)
+    if @attack_pattern[0].include?(pos)
+      @attack_pattern[0].delete_at(@attack_pattern[0].index(pos))
+    elsif @attack_pattern[1].include?(pos)
+      @attack_pattern[1].delete_at(@attack_pattern[1].index(pos))
     end
   end
 end

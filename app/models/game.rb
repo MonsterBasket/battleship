@@ -6,10 +6,7 @@ class Game
     @enemy = Enemy.new 'Enemy'
     @player = Player.new 'Player'
     init
-    until !playing
-      attack
-    end
-    game_over
+    attack while @playing
   end
 
   def init
@@ -21,6 +18,7 @@ class Game
   end
 
   def refresh
+    system('clear') || system('cls')
     puts '         Enemy                      |'
     enemy.board.print_board enemy.status
     puts '                                    |'
@@ -30,16 +28,32 @@ class Game
 
   def attack
     print "\nWhere would you like to attack? "
-    player_hit = player.target enemy
-    hit = enemy.target player
+    player_hit, player_win = player.attack enemy
+    if player_win
+      refresh
+      puts player_hit
+      @playing = false
+      return game_over 'won'
+    end
+    hit, enemy_win = enemy.target player
     refresh
     puts player_hit
     puts hit
+    if enemy_win
+      @playing = false
+      return game_over 'lost'
+    end
   end
 
-  def game_over
-    print "You #{}! Would you like to play again? (Y/N)"
-    restart if gets.downcase[0] == "y"
+  def game_over(won)
+    print "You #{won}! Would you like to play again? (Y/N) "
+    answer = gets
+    return restart if answer[0].downcase == 'y'
+    if answer[0].downcase != 'n'
+      puts "You had TWO options, \"Y\", or \"N\"! Go away!" if answer[0].downcase != 'n'
+    else
+      puts 'Thanks for playing!'
+    end
   end
 
   def restart
