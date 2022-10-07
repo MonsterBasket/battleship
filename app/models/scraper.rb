@@ -1,4 +1,6 @@
 class Scraper
+  attr_reader :articles
+
   def initialize
     @dates = pick3
     @articles = []
@@ -27,7 +29,7 @@ class Scraper
 
   def add_to_articles(doc)
     doc.css('.todayInHistoryListItem').each_with_index do |item, i|
-      unless i.zero
+      unless i.zero?
         title = "#{@dates[0][0].capitalize} #{@dates[0][1]} #{item.css('.todayInHistoryListDate').text}"
         @articles << {title: title, text: item.css('.todayInHistoryListSummary p').text}
       end
@@ -38,10 +40,14 @@ class Scraper
     @articles.each do |item|
       temp = item[:text].split(' ', -1)
       item['lines'] = []
+      item['lines'][0] = ''
       counter = 0
       temp.each do |word|
         item['lines'][counter] += "#{word} "
-        counter += 1 if item['lines'][counter].length > 45 #haven't tested, should be okay?
+        if item['lines'][counter].length > 45
+          counter += 1
+          item['lines'][counter] = ''
+        end
       end
     end
   end

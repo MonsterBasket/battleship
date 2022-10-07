@@ -5,13 +5,9 @@ class Game
     @playing = true
     @enemy = Enemy.new 'Enemy'
     @player = Player.new 'Player'
-    @articles = Thread.new { fetch_articles }
+    @articles = Scraper.new.articles
     init
     attack while @playing
-  end
-
-  def fetch_articles
-    articles = Scraper.new
   end
 
   def init
@@ -26,10 +22,10 @@ class Game
     history = @articles.sample
     system('clear') || system('cls')
     puts '         Enemy                      |'
-    enemy.board.print_board enemy.status, history[0..10]
-    puts '                                    |'
-    puts '       Your board                   |'
-    player.board.print_board player.status
+    enemy.board.print_board enemy.status, (!!history[:title] ? (['', '', '', history[:title]] + history['lines'][0..7]) : [])
+    puts "                                    |  #{!!history['lines'][7] ? history['lines'][7] : ''}"
+    puts "       Your board                   |  #{!!history['lines'][8] ? history['lines'][8] : ''}"
+    player.board.print_board player.status, (!!history['lines'][9] ? history['lines'][9..11] : [])
   end
 
   def attack

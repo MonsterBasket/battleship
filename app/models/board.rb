@@ -14,14 +14,14 @@ class Board
     end
   end
 
-  def print_board(status, history = nil)
-    puts '   ' + 'A|B|C|D|E|F|G|H|I|J'.underline + '              |'
+  def print_board(status, history = [])
+    puts '   ' + 'A|B|C|D|E|F|G|H|I|J'.underline + '              |' + '  ' + (!!history[0] ? history[0] : '')
     printed_coords.each_with_index do |row, a|
       print " #{a}" + '|'.on_blue
       row.each_with_index do |col, b|
         print "#{col}#{borders[a][b]}".underline.on_blue
       end
-      puts '|'.on_blue + ' ' + status[a]
+      puts '|'.on_blue + ' ' + status[a] + '  ' + (!!history[a + 1] ? history[a + 1] : '')
     end
   end
 
