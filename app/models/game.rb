@@ -5,22 +5,28 @@ class Game
     @playing = true
     @enemy = Enemy.new 'Enemy'
     @player = Player.new 'Player'
+    @articles = Thread.new { fetch_articles }
     init
     attack while @playing
+  end
+
+  def fetch_articles
+    articles = Scraper.new
   end
 
   def init
     system('clear') || system('cls')
     player.board.print_board player.status
-    player.ships.each {|ship| player.place_ship ship}
-    enemy.ships.each {|ship| enemy.place_ship_random ship}
+    player.ships.each { |ship| player.place_ship ship }
+    enemy.ships.each { |ship| enemy.place_ship_random ship }
     refresh
   end
 
   def refresh
+    history = @articles.sample
     system('clear') || system('cls')
     puts '         Enemy                      |'
-    enemy.board.print_board enemy.status
+    enemy.board.print_board enemy.status, history[0..10]
     puts '                                    |'
     puts '       Your board                   |'
     player.board.print_board player.status

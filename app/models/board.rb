@@ -14,7 +14,7 @@ class Board
     end
   end
 
-  def print_board(status)
+  def print_board(status, history = nil)
     puts '   ' + 'A|B|C|D|E|F|G|H|I|J'.underline + '              |'
     printed_coords.each_with_index do |row, a|
       print " #{a}" + '|'.on_blue
