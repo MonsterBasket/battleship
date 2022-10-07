@@ -32,22 +32,50 @@ class Enemy < Player
   end
 
   def aimed_target(opponent)
-    # once get_targets is done, this will work through those targets
-    # but! if you attack at [x-1, y], then [x, y-1] and [x, y+1] should be removed... ugh
+    puts @current_targets
+    ship = @current_targets.keys[0]
+    direction = @current_targets[ship].except(:angle).keys.sample
+    x, y = @current_targets[ship].delete(direction)
+    if opponent.board.private_coords[y][x][0] == ship
+      if ['up', 'down'].include?(direction)
+        @current_targets[ship][:angle] = 'vertical'
+        @current_targets[ship].delete('left')
+        @current_targets[ship].delete('right')
+      elsif ['left', 'right'].include?(direction)
+        @current_targets[ship][:angle] = 'horizontal'
+        @current_targets[ship].delete('up')
+        @current_targets[ship].delete('down')
+      end
+    end
+    pos = "#{(x + 65).chr}#{y}"
+    attack opponent, pos
   end
 
   def attack(opponent, pos)
-    super
+    x, y = convert_pos(pos)
+      return miss opponent, x, y if opponent.board.private_coords[y][x] == ' '
+    ship = opponent.board.private_coords[y][x][0]
+    segment = opponent.board.private_coords[y][x][1]
     get_targets opponent, pos
+    puts @current_targets
+    ship.hit name, opponent, x, y, segment
   end
 
   def get_targets(opponent, pos)
     x, y = convert_pos(pos)
-    if opponent.board.private_coords[y][x][0].health == 0
-      @current_targets.delete(pos)
+    ship = opponent.board.private_coords[y][x][0]
+    if ship.health == 1 # already confirmed that the ship has been hit, but this is BEFORE the last unit of health is subtracted
+      @current_targets.delete(ship)
     else
-      @current_targets[pos] = []
-      # if opponent.board.private_coords [x+1, y], [x-1, y], [x,y+1] and [x, y-1] are equal to ' ', << them into @current_targets[pos]
+      @current_targets[ship] = {} unless @current_targets.has_key?(ship)
+      if @current_targets[ship][:angle] != 'horizontal'
+        @current_targets[ship]['up'] = [x, y - 1] if y > 0 && !['•', 'X'.red].include?(opponent.board.printed_coords[y - 1][x])
+        @current_targets[ship]['down'] = [x, y + 1] if y < 9 && !['•', 'X'.red].include?(opponent.board.printed_coords[y + 1][x])
+      end
+      if @current_targets[ship][:angle] != 'vertical'
+        @current_targets[ship]['left'] = [x - 1, y] if x > 0 && !['•', 'X'.red].include?(opponent.board.printed_coords[y][x - 1])
+        @current_targets[ship]['right'] = [x + 1, y] if x < 9 && !['•', 'X'.red].include?(opponent.board.printed_coords[y][x + 1])
+      end
     end
   end
 end

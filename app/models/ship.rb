@@ -11,8 +11,8 @@ class Ship
     # ship = opponent.board.private_coords[y][x][0]
     @health -= 1
     opponent.board.printed_coords[y][x] = 'X'.red
-    opponent.board.borders[y][x] = '■'.red if opponent.board.private_coords[y][x + 1][0] == self && opponent.board.printed_coords[y][x + 1] == 'X'.red
-    opponent.board.borders[y][x - 1] = '■'.red if opponent.board.private_coords[y][x - 1][0] == self && opponent.board.printed_coords[y][x - 1] == 'X'.red
+    opponent.board.borders[y][x] = '■'.red if x < 9 && opponent.board.private_coords[y][x + 1][0] == self && opponent.board.printed_coords[y][x + 1] == 'X'.red
+    opponent.board.borders[y][x - 1] = '■'.red if x > 0 && opponent.board.private_coords[y][x - 1][0] == self && opponent.board.printed_coords[y][x - 1] == 'X'.red
     if @health.zero?
       sink opponent
       return "Hit! You've sunk the enemy's #{name}!" if attacker == 'Player'
