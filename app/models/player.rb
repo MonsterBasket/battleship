@@ -31,8 +31,8 @@ class Player
     print '(Type a coordinate from A0-J9 or R for random): '
     pos = gets
     return place_ship_random ship if pos[0].downcase == 'r'
-    @board.verify_coord pos
-    puts "#{pos.chomp.upcase}, Great! Now do you want that going across, or down?"
+    pos = @board.verify_coord pos
+    puts "#{pos.chomp.upcase}, great! Now do you want that going across, or down?"
     print '(type d for down, or just press enter for across): '
     direction = gets[0]
     x, y = convert_pos(pos)

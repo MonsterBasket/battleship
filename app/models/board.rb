@@ -34,6 +34,8 @@ class Board
       else
         pos[0] + pos[1]
       end
+    elsif pos[1].match(/[a-jA-J]/) && pos[0].match(/[0-9]/)
+      verify_coord pos[1] + pos[0]
     else
       puts "That's not a valid coordinate, please try again."
       verify_coord gets

@@ -38,15 +38,15 @@ class Scraper
 
   def split_articles
     @articles.each do |item|
-      temp = item[:text].split(' ', -1)
-      item['lines'] = []
-      item['lines'][0] = ''
+      words = item[:text].split(' ', -1)
+      item[:lines] = []
+      item[:lines][0] = ''
       counter = 0
-      temp.each do |word|
-        item['lines'][counter] += "#{word} "
-        if item['lines'][counter].length > 45
+      words.each do |word|
+        item[:lines][counter] += "#{word} "
+        if item[:lines][counter].length > 45
           counter += 1
-          item['lines'][counter] = ''
+          item[:lines][counter] = ''
         end
       end
     end
