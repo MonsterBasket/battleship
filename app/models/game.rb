@@ -18,17 +18,17 @@ class Game
     player.board.print_board player.status
     player.ships.each { |ship| player.place_ship ship }
     enemy.ships.each { |ship| enemy.place_ship_random ship }
-    puts "Loading, please wait..."
+    puts 'Loading, please wait...'
   end
 
   def refresh
-    history = @articles.length > 0 ? @articles.sample : {:lines => []}
+    history = @articles.length > 0 ? @articles.sample : {lines: []}
     system('clear') || system('cls')
     puts '         Enemy                      |'
-    enemy.board.print_board enemy.status, (!!history[:title] ? (['', '', '', history[:title]] + history[:lines][0..7]) : [])
-    puts "                                    |  #{!!history[:lines][7] ? history[:lines][7] : ''}"
-    puts "       Your board                   |  #{!!history[:lines][8] ? history[:lines][8] : ''}"
-    player.board.print_board player.status, (!!history[:lines][9] ? history[:lines][9..11] : [])
+    enemy.board.print_board enemy.status, (!!history[:title] ? (['', history[:title], ''] + history[:lines][0..8]) : [])
+    puts "                                    |  #{!!history[:lines][8] ? history[:lines][8] : ''}"
+    puts "       Your board                   |  #{!!history[:lines][9] ? history[:lines][9] : ''}"
+    player.board.print_board player.status, (!!history[:lines][10] ? history[:lines][10..11] : [])
   end
 
   def attack
@@ -46,7 +46,7 @@ class Game
     puts hit
     if enemy_win
       @playing = false
-      return game_over 'lost'
+      game_over 'lost'
     end
   end
 
@@ -55,7 +55,7 @@ class Game
     answer = gets
     return restart if answer[0].downcase == 'y'
     if answer[0].downcase != 'n'
-      puts "You had TWO options, \"Y\", or \"N\"! Go away!"
+      puts 'You had TWO options, "Y", or "N"! Go away!'
     else
       puts 'Thanks for playing!'
     end

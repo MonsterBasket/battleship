@@ -27,15 +27,15 @@ class Board
 
   # This is for confirming that the entered coordinate is valid and not used.
   def verify_coord(pos)
-    if pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/) # will need to drastically change this if I implement an option for board size
+    if pos.length > 1 && pos[0].match(/[a-jA-J]/) && pos[1].match(/[0-9]/) # will need to drastically change this if I implement an option for board size
       if printed_coords[pos[1].to_i][pos[0].upcase.ord - 65] != ' '
         puts "You've already used that spot, please try again."
         verify_coord gets
       else
         pos[0] + pos[1]
       end
-    elsif pos[1].match(/[a-jA-J]/) && pos[0].match(/[0-9]/)
-      verify_coord pos[1] + pos[0]
+    elsif pos.length > 1 && pos[1].match(/[a-jA-J]/) && pos[0].match(/[0-9]/)
+      verify_coord pos[1] + pos[0] # corrects the format if the user enters 0A instead of A0
     else
       puts "That's not a valid coordinate, please try again."
       verify_coord gets
@@ -68,7 +68,7 @@ class Board
   def record_ship(ship, x, y, direction)
     counter_x = counter_y = 0
     ship.size.times do
-      private_coords[y + counter_y][x + counter_x] = [ship,  direction == 'd' ? counter_y : counter_x]
+      private_coords[y + counter_y][x + counter_x] = [ship, direction == 'd' ? counter_y : counter_x]
       direction == 'd' ? counter_y += 1 : counter_x += 1
     end
   end
