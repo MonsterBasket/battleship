@@ -17,7 +17,7 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     method_source (1.0.0)
-    minitest (5.13.0)
+    minitest (5.16.3)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     nokogiri (1.13.8-x86_64-linux)
@@ -37,10 +37,6 @@ GEM
       rack (~> 2.2, >= 2.2.4)
       rack-protection (= 3.0.2)
       tilt (~> 2.0)
-    sinatra-activerecord (2.0.25)
-      activerecord (>= 4.1)
-      sinatra (>= 1.0)
-    sqlite3 (1.5.2-x86_64-linux)
     tilt (2.0.11)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
@@ -55,8 +51,7 @@ DEPENDENCIES
   pry
   rake
   require_all
-  sinatra-activerecord
-  sqlite3
+  sinatra
 
 BUNDLED WITH
    2.3.16
